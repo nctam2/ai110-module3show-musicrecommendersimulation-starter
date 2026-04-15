@@ -65,6 +65,29 @@ A few things I expect could go sideways with this setup:
 - List of already heard song ids (so the ranker can filter them out)
 
 ---
+Current Output (End of Phase 3)
+python -m src.  main                                                                                  
+  ⎿  Loaded songs: 24            
+                                                                                          
+     Top recommendations:                                                                             
+     Midnight Coding - Score: 0.97                                                                    
+     Because: matches your lofi taste; fits a chill mood; energy 0.42 is close to your target; tempo  
+     78 BPM is in your range
+                                                                                                      
+     Spacewalk Thoughts - Score: 0.74
+     Because: fits a chill mood; energy 0.28 is close to your target; tempo 60 BPM is in your range
+
+     Sunday Piano - Score: 0.70
+     Because: fits a chill mood; tempo 70 BPM is in your range
+
+     Drift to Sleep - Score: 0.68
+     Because: fits a chill mood; acousticness 0.88 feels right
+
+     Coffee Shop Stories - Score: 0.56
+     Because: energy 0.37 is close to your target; acousticness 0.89 feels right; tempo 90 BPM is in
+     your range
+
+---
 
 ## Getting Started
 

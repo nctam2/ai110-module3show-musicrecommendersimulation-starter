@@ -9,11 +9,12 @@ You will implement the functions in recommender.py:
 - recommend_songs
 """
 
-from recommender import load_songs, recommend_songs
+from src.recommender import load_songs, recommend_songs
 
 
 def main() -> None:
-    songs = load_songs("data/songs.csv") 
+    songs = load_songs("data/songs.csv")
+    print(f"Loaded songs: {len(songs)}")
 
     # Study-lofi profile, built from the averages of "Library Rain" (id 4)
     # and "Focus Flow" (id 9) — a user who wants calm, acoustic, focus music.
