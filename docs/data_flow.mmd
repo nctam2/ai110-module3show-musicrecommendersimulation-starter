@@ -1,0 +1,22 @@
+flowchart TD
+    A[data/songs.csv] -->|load_songs| B[List of Song dicts]
+    U[User Prefs<br/>genres, moods, target_energy,<br/>target_valence, target_tempo, etc.] --> R
+
+    B --> R{recommend_songs loop}
+    R -->|for each song| F{Already heard?<br/>id in already_heard_ids}
+    F -->|Yes| X[Skip song]
+    F -->|No| S[score_song]
+
+    S --> S1[closeness on energy, valence,<br/>danceability, acousticness, tempo]
+    S --> S2[genre match? 1.0 or 0.0]
+    S --> S3[mood match? 1.0 or 0.0]
+    S1 --> W[Weighted sum<br/>using WEIGHTS dict]
+    S2 --> W
+    S3 --> W
+    W --> SC[score + reasons list]
+
+    SC --> AC[Append song, score, explanation<br/>to scored list]
+    AC --> R
+    R -->|loop done| SORT[Sort scored by score DESC]
+    SORT --> TOP[Take top k = 5]
+    TOP --> OUT[Print title, score, reasons]

@@ -19,6 +19,30 @@ Replace this paragraph with your own summary of what your version does.
 
 Real world music recommenders like Spotify or Apple Music work by mixing a few different strategies at once. Collaborative filtering looks at what other listeners with similar taste have enjoyed, while content based filtering looks at the actual attributes of each song such as tempo, mood, and energy. On top of that, platforms pull in signals like skips, likes, playlist adds, session context, and even text from blogs and reviews to figure out what fits a listener's vibe. My version keeps things simple and focuses purely on the content based side. It treats each user as an average of the songs they already like, then scores every candidate song by how close its features are to that preference rather than just picking songs with the highest values. The priority is transparency and using a closeness idea of similarity, so a user who likes mellow lofi gets more mellow lofi back instead of whatever happens to have the biggest numbers.
 
+### Algorithm Recipe
+
+This is the current algorithm my system follows:
+
+1. Load all the songs from `data/songs.csv` into a list.
+2. Build the user profile by averaging the numeric features (energy, valence, danceability, acousticness, normalized tempo) across their liked songs, and collecting their liked genres and moods into sets.
+3. For every song in the catalog:
+   1. If its id is in the already heard list, skip it.
+   2. Compute a closeness score for each numeric feature, which is just 1 minus the absolute difference between the song value and the user target. Closer to 1 means more similar.
+   3. Check if the song's genre is in the user's liked genres. If yes, that piece of the score is 1, otherwise 0. Same idea for mood.
+   4. Combine all of those into one weighted sum using the weights in `WEIGHTS`: genre and mood are worth 0.20 each, energy and valence 0.15 each, and danceability, acousticness, and tempo 0.10 each.
+   5. Collect a few human readable reasons for why the song scored where it did (matched genre, close energy, etc.).
+4. Sort all the scored songs from highest to lowest.
+5. Return the top k (default 5) as the final ranking with their explanations.
+
+### Potential Biases
+
+A few things I expect could go sideways with this setup:
+
+- Genre and mood together take up 0.40 of the total weight, so the system probably over prioritizes exact genre matches and might skip over a song that nails the user's vibe numerically but happens to be tagged under a different genre. A lofi listener might never see a chill jazz track even if the energy and acousticness line up perfectly.
+- Because the user profile is built from averages, anyone with eclectic taste gets flattened into a mushy middle. If you like both super chill study music and high energy workout songs, the average lands somewhere in between and you end up with mid tempo stuff you probably do not actually want.
+- The score rewards closeness, which means it keeps recommending more of the same. There is no diversity push, so you get stuck in a loop instead of discovering something new.
+- The catalog itself is tiny and hand picked, so whatever genres happen to be overrepresented in the CSV will dominate results no matter what the user asks for.
+
 **Song features used in the simulation:**
 
 - `genre` (categorical, for example lofi, pop, rock)
