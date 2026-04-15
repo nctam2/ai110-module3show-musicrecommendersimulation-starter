@@ -2,60 +2,66 @@
 
 ## 1. Model Name  
 
-Give your model a short, descriptive name.  
-Example: **VibeFinder 1.0**  
+JustVibes 1.0
 
 ---
 
-## 2. Intended Use  
+## 2. Intended Use
 
-Describe what your recommender is designed to do and who it is for. 
+JustVibes 1.0 takes a small catalog of songs and a user taste profile and returns the top 5 tracks that best match that taste. The profile is a mix of liked genres, liked moods, and numeric feature targets like energy and tempo. The system assumes the user has at least some sense of what they like, and that a simple content-based match is good enough.
 
-Prompts:  
+**This is for classroom exploration, not real users.** Treat it as a way to learn how scoring, weighting, and ranking work in a toy system.
 
-- What kind of recommendations does it generate  
-- What assumptions does it make about the user  
-- Is this for real users or classroom exploration  
+**Not intended for:**
 
----
-
-## 3. How the Model Works  
-
-Explain your scoring approach in simple language.  
-
-Prompts:  
-
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
-
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
+- Powering a real music app or playlist feature.
+- Making decisions that affect anyone outside of this project.
+- Comparing artists, labels, or anything involving money or exposure.
+- Any setting where the 24-song catalog would be mistaken for a real library.
 
 ---
 
-## 4. Data  
+## 3. How the Model Works
 
-Describe the dataset the model uses.  
+Each song in the catalog comes tagged with a genre, a mood, and five numbers between 0 and 1 for energy, valence (how positive it feels), danceability, acousticness, and tempo (converted into a 0 to 1 range).
 
-Prompts:  
+The user is described in the same language: a set of liked genres, a set of liked moods, and target values for each of those same five numbers. The numeric targets come from averaging the feature values of songs the user already likes.
 
-- How many songs are in the catalog  
-- What genres or moods are represented  
-- Did you add or remove data  
-- Are there parts of musical taste missing in the dataset  
+To score a song, the system asks a few questions. Does this song's genre sit inside the user's liked genres? Does its mood sit inside the user's liked moods? How close is each of the numeric features to what the user wants? Closeness is just 1 minus the distance between the two values, so a perfect match is 1 and being on opposite ends is 0.
+
+All of those answers get blended into one score using fixed weights. Genre and mood each count for 20 percent. Energy and valence each count for 15 percent. Danceability, acousticness, and tempo each count for 10 percent. The system does this for every song, throws out anything the user has already heard, sorts by score, and returns the top 5 along with a short "because" explanation listing the strongest reasons each song ranked where it did.
 
 ---
 
-## 5. Strengths  
+## 4. Data
 
-Where does your system seem to work well  
+The catalog is `data/songs.csv`, which has 24 songs. Each row has an id, title, artist, genre, mood, and five numeric features: energy, tempo_bpm, valence, danceability, and acousticness. All numeric values are on a 0 to 1 scale except tempo_bpm, which gets normalized at scoring time.
 
-Prompts:  
+I used the starter dataset as-is. Nothing was added or removed.
 
-- User types for which it gives reasonable results  
-- Any patterns you think your scoring captures correctly  
-- Cases where the recommendations matched your intuition  
+**Genre spread (24 songs total):**
+
+- 3 each: pop, lofi, indie folk, ambient
+- 2 each: hip hop, edm, classical
+- 1 each: rock, techno, synthwave, jazz, indie pop, drum and bass
+
+**Mood spread:**
+
+- 6 intense, 5 chill, 4 happy, 3 sad, 3 moody, 2 relaxed, 1 focused
+
+The catalog is small and intentionally tilted toward electronic and indie styles. Big parts of real musical taste are just missing. There is no country, no metal, no r&b, no latin, no funk, no gospel, no k-pop, no reggae, and no spoken-word or genre-blending tracks. On the mood side, things like "romantic," "nostalgic," or "angry" are also absent. Whose taste does this reflect? Broadly speaking, a young, English-speaking, mostly-Western listener with a preference for chill electronic and indie music. The recommender should not be treated as neutral.
+
+---
+
+## 5. Strengths
+
+Users with a clear, consistent taste profile get confident, intuitive rankings. The chill-lofi profile is the best example: Midnight Coding scored 0.97 and the rest of the top 5 were all low-energy acoustic tracks. If I was a lofi listener and opened the app, that list would feel correct on the first look.
+
+Every recommendation comes with a plain-language "because" line naming the strongest reasons that song scored where it did. That transparency makes it easy to understand why a pick landed in the list, and it also makes it easy to spot when the scoring is doing something weird.
+
+The system degrades gracefully when the user's favorite genre is thin in the catalog. The deep-intense-rock profile has only one rock song available, and that song was already heard. Instead of returning nothing, the recommender pulled from nearby genres like techno, edm, and synthwave that shared the intense or moody mood. The ranking still felt directionally correct.
+
+Finally, the math is fast and easy to debug. Closeness and weighted sums are simple enough that I can hand-verify a score if something looks off, which made the whole evaluation phase possible.
 
 ---
 
@@ -65,7 +71,7 @@ The catalog has 24 songs, which is the biggest limitation on its own. Any recomm
 
 The closeness scoring has no diversity push built in. Once the system finds a song that nails a user's profile, the next best results tend to be near-duplicates of the first one, so the top 5 feels like variations on a theme instead of a range of options. Genre and mood together hold 0.40 of the total weight, which acts as a soft cap on how much a numerically-perfect song from another genre can climb. That came out clearly in the adversarial-conflicting profile, where a sad-tagged indie folk track got beaten by edm intense tracks that had both the genre match and the strong energy numbers in their favor.
 
-Finally, the user profile is built by averaging the features of a user's liked songs. Anyone with eclectic taste, say both high-energy workout music and low-energy study music, gets flattened into a mushy middle that does not match either cluster they actually like. The system treats every user as if their preferences live in one spot, which is not how taste actually works.
+Finally, the user profile is built by averaging the features of a user's liked songs. Anyone with eclectic taste, say both high-energy workout music and low-energy study music, gets flattened into a mushy middle that does not match either cluster they actually like. The system treats every user as if their preferences live in one spot, which is not how taste actually works. Something that would definitely need to be approached differently for future iterations.
 
 ---
 
@@ -93,25 +99,20 @@ Beyond the profile runs, I did a weight experiment where I doubled energy to 0.3
 
 ---
 
-## 8. Future Work  
+## 8. Future Work
 
-Ideas for how you would improve the model next.  
+If I kept developing this, three changes would matter most:
 
-Prompts:  
-
-- Additional features or preferences  
-- Better ways to explain recommendations  
-- Improving diversity among the top results  
-- Handling more complex user tastes  
+1. **Add a diversity push to the top 5.** Right now the ranker just picks the five best-scoring songs, which often means five near-duplicates of the same winner. A small tweak that penalizes songs too similar to ones already in the list would give the user more range without throwing out the closeness idea entirely.
+2. **Let a user profile hold more than one taste cluster.** The current average-based profile flattens eclectic taste into a mushy middle. Storing two or three clusters per user (gym music, study music, late-night music) and scoring against each separately would fix that without making the model hard to explain.
+3. **Grow the catalog and balance it.** 24 songs is enough to demo the math but not enough to surface real recommendations. Pulling from a public dataset and ensuring at least a handful of songs per genre and mood would make the evaluation much more meaningful. It would also make the focused and rock edge cases stop being edge cases.
 
 ---
 
-## 9. Personal Reflection  
+## 9. Personal Reflection
 
-A few sentences about your experience.  
+The thing that stuck with me most is how much the "smart" behavior of a recommender is really just weighted math over features someone decided to include. There is no hidden intelligence here. If a genre is missing from the catalog, no user can ever be recommended it. If a weight is set too high, one dimension crowds out all the others. Every design choice shows up in the output, and the output looks confident even when the underlying data is thin. It makes me wonder how these systems are tested in productions. Do they roll out to sample users? How much data do they test off of? Would be interesting to hear from someone with experience working on these systems.
 
-Prompts:  
+The unexpected part was watching the adversarial-conflicting profile. I thought asking for sad edm at high energy would break the system or produce chaos, but instead it just quietly prioritized the edm intense tracks and pushed the one sad indie folk match to position 3. The system was not confused. It was doing exactly what the weights told it to do, and the result just did not match the user's stated mood. That felt like a small version of what goes wrong in real recommenders: the math is fine, the scoreboard is fine, and the user still ends up with something they did not want.
 
-- What you learned about recommender systems  
-- Something unexpected or interesting you discovered  
-- How this changed the way you think about music recommendation apps  
+It also changed how I think about the apps I use. Spotify's Discover Weekly and Apple Music's recommendations are doing something far more sophisticated than this, but the same underlying question applies. What features did someone pick, what weights did they tune, whose taste is overrepresented in the training pool, and which users are being quietly served a narrower version of the catalog. Human judgment matters in all of those choices, and I do not think that goes away just because the model gets bigger. But I do have a lot more respect for the time the engineers put into the more sophisticated models, into a small feature that I definitely take for granted every day when listening on Spotify.
