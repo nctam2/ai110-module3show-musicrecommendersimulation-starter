@@ -17,17 +17,28 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+Real world music recommenders like Spotify or Apple Music work by mixing a few different strategies at once. Collaborative filtering looks at what other listeners with similar taste have enjoyed, while content based filtering looks at the actual attributes of each song such as tempo, mood, and energy. On top of that, platforms pull in signals like skips, likes, playlist adds, session context, and even text from blogs and reviews to figure out what fits a listener's vibe. My version keeps things simple and focuses purely on the content based side. It treats each user as an average of the songs they already like, then scores every candidate song by how close its features are to that preference rather than just picking songs with the highest values. The priority is transparency and using a closeness idea of similarity, so a user who likes mellow lofi gets more mellow lofi back instead of whatever happens to have the biggest numbers.
 
-Some prompts to answer:
+**Song features used in the simulation:**
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+- `genre` (categorical, for example lofi, pop, rock)
+- `mood` (categorical, for example chill, happy, intense)
+- `energy` (numeric, 0 to 1)
+- `valence` (numeric, 0 to 1, how positive the song feels)
+- `danceability` (numeric, 0 to 1)
+- `acousticness` (numeric, 0 to 1)
+- `tempo_bpm` (numeric, normalized to 0 to 1 for scoring)
 
-You can include a simple diagram or bullet list if helpful.
+**UserProfile features used in the simulation:**
+
+- Average `energy` across liked songs
+- Average `valence` across liked songs
+- Average `danceability` across liked songs
+- Average `acousticness` across liked songs
+- Average normalized `tempo` across liked songs
+- Set of liked `genre` tags
+- Set of liked `mood` tags
+- List of already heard song ids (so the ranker can filter them out)
 
 ---
 
