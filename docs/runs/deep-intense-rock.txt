@@ -1,0 +1,20 @@
+Profile: deep-intense-rock
+Loaded songs: 24
+
+Top recommendations:
+
+Concrete Dreams - Score: 0.70
+Because: fits a moody mood; acousticness 0.15 feels right
+
+Hyper Sprint - Score: 0.70
+Because: fits a intense mood; energy 0.95 is close to your target
+
+Pulse Reactor - Score: 0.70
+Because: fits a intense mood; energy 0.89 is close to your target; tempo 140 BPM is in your range
+
+Bass Drop Overdrive - Score: 0.69
+Because: fits a intense mood; energy 0.97 is close to your target
+
+Gym Hero - Score: 0.69
+Because: fits a intense mood; energy 0.93 is close to your target; acousticness 0.05 feels right
+

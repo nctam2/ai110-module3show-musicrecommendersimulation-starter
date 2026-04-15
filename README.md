@@ -126,11 +126,38 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+### Five User Profiles
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+I ran the recommender across five named profiles defined in `src/main.py`. Each one was picked to stress a different part of the scoring logic. Full terminal output for each run lives in `docs/runs/`.
+
+Run any profile with:
+
+```bash
+python -m src.main <profile>
+```
+
+| Profile | What it tests | Log file |
+|---|---|---|
+| `chill-lofi` | Clean baseline. Low energy, high acousticness, lofi plus focused mood. | `docs/runs/chill-lofi.txt` |
+| `high-energy-pop` | High energy pop and edm with a happy mood. Tests whether genre matches dominate. | `docs/runs/high-energy-pop.txt` |
+| `deep-intense-rock` | High energy rock with intense and moody mood. Catalog only has one rock track (already heard), so this tests fallback behavior. | `docs/runs/deep-intense-rock.txt` |
+| `adversarial-conflicting` | Picks edm genre with sad mood and energy target 0.90. The genre and mood pull in opposite directions. | `docs/runs/adversarial-conflicting.txt` |
+| `adversarial-empty-taste` | Empty favorite_genres and favorite_moods with every numeric target at 0.5. Tests what happens with no stated preferences. | `docs/runs/adversarial-empty-taste.txt` |
+
+A few things that stood out:
+
+- The chill-lofi profile gave a clean, intuitive ranking. Midnight Coding (lofi + chill) scored 0.97, well above everything else.
+- The deep-intense-rock profile is interesting. The only rock song in the catalog (Storm Runner, id 3) is in `already_heard_ids`, so the top 5 is pulled from adjacent genres like techno, edm, and synthwave that share the intense or moody mood. This shows the system degrading gracefully when the user's favorite genre is thin in the catalog.
+- adversarial-conflicting showed that with a strong numeric pull (energy 0.90) and a genre match, edm intense tracks like Bass Drop Overdrive and Pulse Reactor beat out the sad indie folk track Empty Rooms even though Empty Rooms is the actual mood match. The genre plus numeric closeness out-earned a lone mood tag.
+- adversarial-empty-taste crowded every score around 0.50. Without a genre or mood to match on, the whole ranking is decided by pure numeric closeness, which gives you a bland middle.
+
+### Weight Experiment: Double Energy, Halve Genre
+
+I temporarily shifted the weights in `WEIGHTS` at `src/recommender.py:6` from `energy: 0.15, genre: 0.20` to `energy: 0.30, genre: 0.10` and re-ran two profiles. After the experiment I reverted the weights. Outputs from the experiment are in `docs/runs/chill-lofi-weighted.txt` and `docs/runs/high-energy-pop-weighted.txt`.
+
+For chill-lofi, the top 5 ordering did not move at all. Midnight Coding was already a perfect match on genre, mood, and energy, so no amount of reweighting was going to unseat it. For high-energy-pop, the order also stayed the same, but Block Party's lead over Gym Hero widened from a tie at 0.76 to 0.90 vs 0.79. Block Party is hip hop not pop, so halving the genre weight cost Gym Hero more than it cost Block Party, which coasted on its happy mood and strong energy match. Takeaway: when the best song is a clear all-around match, weights barely matter; when two songs are close, weight shifts decide tiebreaks in predictable ways.
+
+Note that after this change the weights sum to 1.05 instead of 1.0. That is fine for a weighted sum (scores can exceed 1.0), but it means raw scores are not directly comparable across weight regimes.
 
 ---
 

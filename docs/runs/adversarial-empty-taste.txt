@@ -1,0 +1,20 @@
+Profile: adversarial-empty-taste
+Loaded songs: 24
+
+Top recommendations:
+
+Midnight Coding - Score: 0.52
+Because: energy 0.42 is close to your target
+
+Focus Flow - Score: 0.51
+Because: energy 0.40 is close to your target
+
+Night Drive Loop - Score: 0.50
+Because: tempo 110 BPM is in your range
+
+Faded Polaroids - Score: 0.50
+Because: numeric similarity only
+
+Library Rain - Score: 0.49
+Because: numeric similarity only
+

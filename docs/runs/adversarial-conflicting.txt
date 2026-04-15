@@ -1,0 +1,20 @@
+Profile: adversarial-conflicting
+Loaded songs: 24
+
+Top recommendations:
+
+Bass Drop Overdrive - Score: 0.70
+Because: matches your edm taste; energy 0.97 is close to your target; acousticness 0.02 feels right; tempo 174 BPM is in your range
+
+Pulse Reactor - Score: 0.70
+Because: matches your edm taste; energy 0.89 is close to your target; acousticness 0.04 feels right
+
+Empty Rooms - Score: 0.54
+Because: fits a sad mood
+
+Storm Runner - Score: 0.53
+Because: energy 0.91 is close to your target; acousticness 0.10 feels right; tempo 152 BPM is in your range
+
+Warehouse Nights - Score: 0.52
+Because: energy 0.85 is close to your target; acousticness 0.06 feels right
+

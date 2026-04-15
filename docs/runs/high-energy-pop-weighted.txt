@@ -1,0 +1,20 @@
+Profile: high-energy-pop
+Loaded songs: 24
+
+Top recommendations:
+
+Block Party - Score: 0.90
+Because: fits a happy mood; energy 0.78 is close to your target; acousticness 0.12 feels right
+
+Gym Hero - Score: 0.79
+Because: matches your pop taste; energy 0.93 is close to your target; acousticness 0.05 feels right; tempo 132 BPM is in your range
+
+Pulse Reactor - Score: 0.78
+Because: matches your edm taste; energy 0.89 is close to your target; tempo 140 BPM is in your range
+
+Bass Drop Overdrive - Score: 0.72
+Because: matches your edm taste
+
+Warehouse Nights - Score: 0.68
+Because: energy 0.85 is close to your target; acousticness 0.06 feels right; tempo 128 BPM is in your range
+

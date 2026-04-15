@@ -1,0 +1,19 @@
+# Reflection: Profile-Pair Comparisons
+
+This file compares what the recommender returned for each pair of profiles I tested. Raw outputs for each profile are in `docs/runs/`. The goal here is to explain what changed between two rankings and why that lines up with what each profile asked for, in plain language.
+
+## chill-lofi vs deep-intense-rock
+
+These two profiles are basically opposites, so the results should look nothing alike, and they do not. The chill-lofi user likes quiet, acoustic, slow-tempo music, and the top 5 reflects that: Midnight Coding, Spacewalk Thoughts, Sunday Piano, Drift to Sleep, Coffee Shop Stories. All of these sit at low energy (0.12 to 0.42) and high acousticness (0.71 to 0.92). The deep-intense-rock user goes the other way: high energy, low acousticness, fast tempo, and a preference for moody or intense tagged songs. That ranking pulled in Concrete Dreams, Hyper Sprint, Pulse Reactor, Bass Drop Overdrive, and Gym Hero. Every song in that list is above 0.68 energy and below 0.16 acousticness. There is zero overlap between the two top 5s, which makes sense because the profiles pin opposite ends of almost every numeric axis.
+
+## chill-lofi vs high-energy-pop
+
+The chill-lofi top 5 is slow, acoustic, and lofi-adjacent. The high-energy-pop top 5 goes in a different direction: Block Party, Gym Hero, Pulse Reactor, Bass Drop Overdrive, Warehouse Nights. These are loud, danceable, and sit between 0.78 and 0.97 energy. Again, no songs appear in both lists. The interesting thing is that Block Party (hip hop, happy) topped the high-energy-pop list even though the profile's favorite genres are pop and edm. That happened because the profile's top three liked songs (1, 10, 18) are all pop happy tracks and are therefore filtered out as already heard, so the system had to reach beyond pop. Block Party won because it matched the happy mood and landed close to the target energy, and those numeric factors together out-earned a missing genre match from the remaining candidates.
+
+## adversarial-conflicting vs high-energy-pop
+
+Both profiles share a target energy near 0.90 and an edm preference, so you might expect the rankings to look almost identical. They partially do: Bass Drop Overdrive and Pulse Reactor show up in both top 5s. But the mood flag pulls adversarial-conflicting sideways. Because the profile asks for a sad mood on top of high-energy edm, the ranking opens up room for Empty Rooms (indie folk, sad, low energy 0.30) at position 3 with a score of 0.54. That song does not belong on any high-energy list under normal circumstances, but the mood weight is strong enough to pull it into the top 5 anyway. The takeaway is that the system does try to honor the mood tag, but when the genre and numeric sliders all point one way and the mood points the other, the genre plus energy combination usually wins. Mood alone cannot beat a full-axis match.
+
+## adversarial-empty-taste vs chill-lofi
+
+This pair shows what happens when you strip categorical preferences away entirely. The empty-taste user has no favorite genres, no favorite moods, and every numeric target parked at 0.5. Its top 5 is Midnight Coding, Focus Flow, Night Drive Loop, Faded Polaroids, Library Rain, all clustered tightly between 0.49 and 0.52. The chill-lofi user, by contrast, has a clear runaway winner at 0.97 and a long gap down to 0.74 for second place. Even though both top 5s include Midnight Coding, the meaning is different. For chill-lofi, it was the actual best match on almost every dimension. For empty-taste, it just happened to be the song closest to the middle of the feature space. This comparison made it obvious that the recommender needs categorical signals (genre, mood) to produce a confident top pick. Without them, everything compresses into a narrow band and the ranking becomes nearly arbitrary.

@@ -1,0 +1,20 @@
+Profile: chill-lofi
+Loaded songs: 24
+
+Top recommendations:
+
+Midnight Coding - Score: 1.02
+Because: matches your lofi taste; fits a chill mood; energy 0.42 is close to your target; tempo 78 BPM is in your range
+
+Spacewalk Thoughts - Score: 0.88
+Because: fits a chill mood; energy 0.28 is close to your target; tempo 60 BPM is in your range
+
+Sunday Piano - Score: 0.83
+Because: fits a chill mood; tempo 70 BPM is in your range
+
+Drift to Sleep - Score: 0.79
+Because: fits a chill mood; acousticness 0.88 feels right
+
+Coffee Shop Stories - Score: 0.71
+Because: energy 0.37 is close to your target; acousticness 0.89 feels right; tempo 90 BPM is in your range
+
